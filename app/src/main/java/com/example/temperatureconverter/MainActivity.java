@@ -2,6 +2,7 @@ package com.example.temperatureconverter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -14,6 +15,8 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+    private SharedPreferences selectionPrefs;
+    private RadioButton fahrRadio, celsRadio;
     private TextView convHist;
     private EditText fahr;
     private EditText cels;
@@ -22,6 +25,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        fahrRadio = findViewById(R.id.fahrToCelsius);
+        celsRadio = findViewById(R.id.celsiusToFahr);
+
+        selectionPrefs = getSharedPreferences("SELECTIONS", MODE_PRIVATE);
+        String pref = selectionPrefs.getString("OPTION", "FAHRTOCELSIUS");
+
+        if (pref.equals("FAHRTOCELSIUS")) {
+            fahrRadio.setChecked(true);
+        } else {
+            celsRadio.setChecked(true);
+        }
+
         convHist = findViewById(R.id.convHistory);
         fahr = findViewById(R.id.inputFahr);
         cels = findViewById(R.id.inputCelsius);
@@ -34,20 +50,24 @@ public class MainActivity extends AppCompatActivity {
         RadioButton radioBtn = findViewById(selectedId);
         convHist = findViewById(R.id.convHistory);
         String histStr = convHist.getText().toString();
+        SharedPreferences.Editor editor = selectionPrefs.edit();
 
         switch(radioBtn.getId()) {
             case R.id.celsiusToFahr:
                 String testString = convertCtoF();
                 convHist.setText(testString + histStr);
+                editor.putString("OPTION", "CELSIUSTOFAHR");
                 break;
             case R.id.fahrToCelsius:
                 String testStr = convertFtoC();
                 convHist.setText(testStr + histStr);
+                editor.putString("OPTION", "FAHRTOCELSIUS");
                 break;
             default:
                 Log.d(TAG, "convertTemp: UNKNOWN VIEW SELECTED");
                 break;
         }
+        editor.apply();
     }
 
     public String convertFtoC() {
