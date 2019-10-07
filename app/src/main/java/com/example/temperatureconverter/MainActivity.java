@@ -11,16 +11,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-/**
- *  Add:
- *  landscape layout
- *  change "empty" to null? currently newline
- *
- *  When CelsToFahr radio is selected, disable the opposite input textfield? & vice versa
- *
- */
-
-
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
